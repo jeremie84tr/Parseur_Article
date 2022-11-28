@@ -334,7 +334,7 @@ int main(int argc,char** argv)
             
             /*Recuperation des infos des auteurs : nom, prenom, adresse*///--------------PARTIE AUTEUR
             
-            
+            //------------/!\/!\/!\insuffisant/!\/!\/!\
             
             if(isTxt)
             {
@@ -344,21 +344,7 @@ int main(int argc,char** argv)
             {
                 fputs("\t<auteur>",pFile2);
             }
-            
-            
-            
-            
-            
-            
             while (boolean == 1){
-                
-                /*Si RecupereDonnerLigne est <block alors
-                 je vais vers le premier mot pour voir sa position.
-                 S'y il est à plus de 300 cela veut dire que se mot provient
-                 de la colonne qui est à droit du document
-                 (S'y il y en a une ) */
-                /*Recupération du block ou se trouve Abstract ou //--------------------------PARTIE ABSTRACT
-                 We,This,As,In si Abstract n'est pas présent dans le fichier*/
                 
                 if (strcmp(RecupereDonnerLigne,"<block")==0){
                     
@@ -373,6 +359,9 @@ int main(int argc,char** argv)
                     strcpy(CopieLigneQuOnEtudie,Ligne);
                     RecupereDonnerLigne=strtok(CopieLigneQuOnEtudie," \t\n");
                     RecupereDonnerLigne=strtok(NULL," \t\n");
+                    RecupereDonnerLigne=strtok(NULL," \t\n");
+                    RecupereDonnerLigne=strtok(NULL," \t\n");
+                    RecupereDonnerLigne=strtok(NULL," \t\n");
                     
                     /*J'accède  à la position xMin de mon mot*/
                     
@@ -382,10 +371,12 @@ int main(int argc,char** argv)
                     /*atof transforme contenu d'un char* en double*/
                     
                     xMin=atof(RecuperationPartieDonnerLigne);
-                    if(xMin<300.0){
+                    if(xMin<160.0){//---------AUTEUR (ymax < 160)  -----insuffisant
+                        
                         RecupereDonnerLigne=strtok(Ligne," \t\n");
                         
                         /*Pour accéder à la partie ou se trouve le mot*/
+
                         
                         for (int i=0 ; i<4 ; i++){
                             RecupereDonnerLigne=strtok(NULL," \t\n");
@@ -393,99 +384,7 @@ int main(int argc,char** argv)
                         RecuperationPartieDonnerLigne=strtok(RecupereDonnerLigne," <>");
                         RecuperationPartieDonnerLigne=strtok(NULL," <>");
                         
-                        /*Si le mot c'est Abstract ou We,This,As,In
-                         si Abstract n'est pas présent*/
-                        
-                        
-                        std::string trouverAbstract = RecuperationPartieDonnerLigne;
-                        if (trouverAbstract.find("Abstract") != std::string::npos ||
-                            strcmp(RecuperationPartieDonnerLigne,"ABSTRACT") == 0 ||
-                            strcmp(RecuperationPartieDonnerLigne,"This") == 0 ||
-                            strcmp(RecuperationPartieDonnerLigne,"As") == 0||
-                            strcmp(RecuperationPartieDonnerLigne,"In") == 0||
-                            strcmp(RecuperationPartieDonnerLigne,"We") == 0){
-                            if(isTxt)
-                            {
-                                fputs("\nAbstract :",pFile2);
-                            }
-                            if(isXml)
-                            {
-                                fputs("</auteur>\n\t<abstract>",pFile2);
-                            }
-                            boolean=0;
-                            if (strcmp(RecuperationPartieDonnerLigne,"Abstract") != 0){
-                                fputs(RecuperationPartieDonnerLigne,pFile2);
-                                fputs(" ",pFile2);
-                            }
-                        }
-                        else{//----------------------------------------------PARTIE AUTEUR
-                            int mail=0;
-                            boolean=0;
-                            while(RecuperationPartieDonnerLigne[boolean]!='\0'){
-                                if(RecuperationPartieDonnerLigne[boolean]=='@'){
-                                    mail=1;
-                                }
-                                boolean++;
-                            }
-                            boolean=1;
-                            if( mail == 0 ){
-                                fputs(RecuperationPartieDonnerLigne,pFile2);
-                                fputs(" ",pFile2);
-                            }
-                            while (strcmp(RecupereDonnerLigne,"</block>")!=0){
-                                if(strcmp(RecupereDonnerLigne,"<word")==0){
-                                    
-                                    
-                                    /*Pour accéder à la partie ou se trouve le mot*/
-                                    
-                                    int mail=0;
-                                    
-                                    for (int i=0 ; i<4 ; i++){
-                                        RecupereDonnerLigne=strtok(NULL," \t\n");
-                                    }
-                                    RecuperationPartieDonnerLigne=strtok(RecupereDonnerLigne," <>");
-                                    RecuperationPartieDonnerLigne=strtok(NULL," <>");
-                                    boolean=0;
-                                    while(RecuperationPartieDonnerLigne[boolean]!='\0'){
-                                        if(RecuperationPartieDonnerLigne[boolean]=='@'){
-                                            mail=1;
-                                        }
-                                        boolean++;
-                                    }
-                                    boolean=1;
-                                    if( mail != 0 ){
-                                        boolean=0;
-                                    }
-                                    else if(strcmp(RecuperationPartieDonnerLigne,"\\")!=0){
-                                        fputs(RecuperationPartieDonnerLigne,pFile2);
-                                        fputs(" ",pFile2);
-                                    }
-                                    fgets(Ligne,255,pFile);
-                                    RecupereDonnerLigne=strtok(Ligne," \t\n");
-                                    
-                                    
-                                }
-                                else{
-                                    fgets(Ligne,255,pFile);
-                                    RecupereDonnerLigne=strtok(Ligne," \t\n");
-                                    
-                                }
-                            }
-                            boolean=1;
-                        }
-                    }
-                    else{//---------AUTEUR QUAND ON EST A DROITE DE LA PAGE (xmin > 300)
-                        
-                        RecupereDonnerLigne=strtok(Ligne," \t\n");
-                        
-                        /*Pour accéder à la partie ou se trouve le mot*/
-                        
-                        for (int i=0 ; i<4 ; i++){
-                            RecupereDonnerLigne=strtok(NULL," \t\n");
-                        }
-                        RecuperationPartieDonnerLigne=strtok(RecupereDonnerLigne," <>");
-                        RecuperationPartieDonnerLigne=strtok(NULL," <>");
-                        
+                        printf("block ymin %f  mot 1 : %s\n",xMin,RecuperationPartieDonnerLigne);
                         
                         int mail=0;
                         boolean=0;
@@ -543,6 +442,100 @@ int main(int argc,char** argv)
                         }
                         boolean=1;
                     }
+                    else{
+                        boolean=0;
+                    }
+                }
+                else{
+                    fgets(Ligne,255,pFile);
+                    RecupereDonnerLigne=strtok(Ligne," \t\n");
+                    
+                }
+            }
+            boolean=1;
+            
+            if(isTxt)
+            {
+                fputs("\n",pFile2);
+            }
+            if(isXml)
+            {
+                fputs("</auteur>\n",pFile2);
+            }
+            
+            
+            
+            //------------------------------------------------------------------------PARTIE ABSTRACT
+
+            while (boolean == 1){
+                
+                /*Si RecupereDonnerLigne est <block alors
+                 je vais vers le premier mot pour voir sa position.
+                 S'y il est à plus de 300 cela veut dire que se mot provient
+                 de la colonne qui est à droit du document
+                 (S'y il y en a une ) */
+                /*Recupération du block ou se trouve Abstract ou 
+                 We,This,As,In si Abstract n'est pas présent dans le fichier*/
+                
+                if (strcmp(RecupereDonnerLigne,"<block")==0){
+                    
+                    
+                    /*Je fais 2 fgets pour aller*/
+                    
+                    fgets(Ligne,255,pFile);
+                    fgets(Ligne,255,pFile);
+                    /*Je fais copie de la ligne au cas si la position
+                     est inférieur à 300*/
+                    
+                    strcpy(CopieLigneQuOnEtudie,Ligne);
+                    RecupereDonnerLigne=strtok(CopieLigneQuOnEtudie," \t\n");
+                    RecupereDonnerLigne=strtok(NULL," \t\n");
+                    
+                    /*J'accède  à la position xMin de mon mot*/
+                    
+                    RecuperationPartieDonnerLigne=strtok(RecupereDonnerLigne,"=\"");
+                    RecuperationPartieDonnerLigne=strtok(NULL,"=\"");
+                    
+                    /*atof transforme contenu d'un char* en double*/
+                    
+                    xMin=atof(RecuperationPartieDonnerLigne);
+                    if(xMin<300.0){
+                        RecupereDonnerLigne=strtok(Ligne," \t\n");
+                        
+                        /*Pour accéder à la partie ou se trouve le mot*/
+                        
+                        for (int i=0 ; i<4 ; i++){
+                            RecupereDonnerLigne=strtok(NULL," \t\n");
+                        }
+                        RecuperationPartieDonnerLigne=strtok(RecupereDonnerLigne," <>");
+                        RecuperationPartieDonnerLigne=strtok(NULL," <>");
+                        
+                        /*Si le mot c'est Abstract ou We,This,As,In
+                         si Abstract n'est pas présent*/
+                        
+                        
+                        std::string trouverAbstract = RecuperationPartieDonnerLigne;
+                        if (trouverAbstract.find("Abstract") != std::string::npos ||
+                            strcmp(RecuperationPartieDonnerLigne,"ABSTRACT") == 0 ||
+                            strcmp(RecuperationPartieDonnerLigne,"This") == 0 ||
+                            strcmp(RecuperationPartieDonnerLigne,"As") == 0||
+                            strcmp(RecuperationPartieDonnerLigne,"In") == 0||
+                            strcmp(RecuperationPartieDonnerLigne,"We") == 0){
+                            if(isTxt)
+                            {
+                                fputs("Abstract :",pFile2);
+                            }
+                            if(isXml)
+                            {
+                                fputs("\t<abstract>",pFile2);
+                            }
+                            boolean=0;
+                            if (strcmp(RecuperationPartieDonnerLigne,"Abstract") != 0){
+                                fputs(RecuperationPartieDonnerLigne,pFile2);
+                                fputs(" ",pFile2);
+                            }
+                        }
+                    }
                 }
                 
                 /*Sinon je vais à la prochain ligne de mon application.txt*/
@@ -552,7 +545,7 @@ int main(int argc,char** argv)
                     RecupereDonnerLigne=strtok(Ligne," \t\n");
                     
                 }
-            }//---------------------------------------------------LA ON PRENDS VRAIMENT ABSTRACT
+            }
             boolean=1;
             
             fgets(Ligne,255,pFile);
